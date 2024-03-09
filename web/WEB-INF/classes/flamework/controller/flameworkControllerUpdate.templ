@@ -1,0 +1,9 @@
+public String update(@FromBody [classNameMaj] [classNameMin]) throws Exception {
+    [classNameMaj] where = new [classNameMaj]();
+    [controllerWhereInstanciation]
+    try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
+        dao.update(connex, [classNameMin], where);
+        connex.commit();
+        return "update success";
+    }
+}

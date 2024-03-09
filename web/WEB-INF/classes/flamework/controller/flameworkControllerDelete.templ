@@ -1,0 +1,9 @@
+public String delete([primaryType] [primaryNameMin]) throws Exception {
+    [classNameMaj] where=new [classNameMaj]();
+    [controllerWhereIdInstanciation]
+    try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
+        dao.delete(connex, where);
+        connex.commit();
+        return "delete success";
+    }
+}

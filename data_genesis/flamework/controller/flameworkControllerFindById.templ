@@ -1,0 +1,8 @@
+public [classNameMaj] findById([primaryType] [primaryNameMin]) throws Exception {
+    [classNameMaj] where=new [classNameMaj]();
+    [controllerWhereIdInstanciation]
+    try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
+        [classNameMaj][] [classNameMin]s = dao.select(connex, [classNameMaj].class,where);
+        return [classNameMin]s[0];
+    }
+}

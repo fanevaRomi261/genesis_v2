@@ -1,0 +1,192 @@
+[
+    {
+        "id": 1,
+        "nom": "Java Flamework",
+        "syntax": {
+            "namespace": "package",
+            "namespaceStart": ";",
+            "namespaceEnd": ""
+        },
+        "types": {
+            "int": "Integer",
+            "double": "Double",
+            "string": "String",
+            "date": "java.time.LocalDate",
+            "timestamp": "java.time.LocalDateTime"
+        },
+        "typeParsers": {
+            "Integer": "Integer.parseInt([value])",
+            "Double": "Double.parseDouble([value])",
+            "String": "[value]",
+            "java.time.LocalDate": "java.time.LocalDate.parse([value])",
+            "java.time.LocalDateTime": "java.time.LocalDateTime.parse([value])"
+        },
+        "skeleton": "flamework_skeleton",
+        "projectNameTags": [
+            "[projectNameMaj]/web/pages/layout/layout.jsp",
+            "[projectNameMaj]/web/WEB-INF/web.xml",
+            "[projectNameMaj]/web/index.jsp",
+            "[projectNameMaj]/execute.bat"
+        ],
+        "additionnalFiles": [],
+        "model": {
+            "modelImports": [
+                "import veda.godao.annotations.Column;",
+                "import veda.godao.annotations.Table;",
+                "import veda.godao.annotations.PrimaryKey;"
+            ],
+            "modelExtends": "",
+            "modelAnnotations": [
+                "@Table(\"[tableName]\")"
+            ],
+            "modelPrimaryFieldAnnotations": [
+                "@PrimaryKey"
+            ],
+            "modelForeignFieldAnnotations": [
+                "@veda.godao.annotations.ForeignKey(recursive=true)"
+            ],
+            "modelFieldAnnotations": [
+                "@Column(\"[columnName]\")"
+            ],
+            "modelFieldCase": "Min",
+            "modelFieldContent": "private [fieldType] [fieldName[modelFieldCase]];",
+            "modelGetter": "public [fieldType] get[fieldNameMaj](){ return [fieldName[modelFieldCase]]; }",
+            "modelSetter": "public void set[fieldNameMaj]([fieldType] o){ [fieldName[modelFieldCase]]=o; }",
+            "modelConstructors": [
+                "public [classNameMaj](){}",
+                "public [classNameMaj]([primaryFieldType] o){ [primaryFieldName[modelFieldCase]]=o; }"
+            ],
+            "modelSavePath": "[projectNameMaj]/src/entities",
+            "modelAdditionnalFiles": [],
+            "modelExtension": "java",
+            "modelPackage": "entities",
+            "modelTemplate": "ModelTemplate"
+        },
+        "controller": {
+            "controllerImports": [
+                "import itu.framework.annotation.AnnotationUrl;",
+                "import itu.framework.annotation.Authentification;",
+                "import itu.framework.annotation.AnnotationScop;",
+                "import itu.framework.annotation.AnnotationSession;",
+                "import itu.framework.annotation.FromBody;",
+                "import itu.framework.annotation.FromHeader;",
+                "import itu.framework.annotation.FromUrl;",
+                "import itu.framework.annotation.RestApi;",
+                "import itu.framework.upload.FileUpload;",
+                "import itu.framework.modelview.ModelView;",
+                "import veda.godao.DAO;",
+                "import veda.godao.utils.DAOConnexion;",
+                "import java.sql.Connection;",
+                "import entities.[classNameMaj];"
+            ],
+            "controllerAnnotations": [],
+            "controllerExtends": "",
+            "controllerName": "[classNameMaj]Controller",
+            "controllerFields": [
+                {
+                    "controllerFieldAnnotations": [],
+                    "controllerFieldContent": "private DAO dao=new DAO(\"[databaseName]\", \"[databaseHost]\", \"[databasePort]\", \"[user]\", \"[pwd]\", [databaseUseSSL], [databaseID]);"
+                }
+            ],
+            "controllerChangeInstanciation": {
+                "template": "o.set[fieldNameMaj]([content]);",
+                "value": "entity.getData().get(\"[fieldNameMin]\")"
+            },
+            "controllerWhereInstanciation": {
+                "template": "where.set[primaryNameMaj]([content]);",
+                "value": "[classNameMin].get[primaryNameMaj]()"
+            },
+            "controllerWhereIdInstanciation": {
+                "template": "where.set[primaryNameMaj]([content]);",
+                "value": "[primaryNameMin]"
+            },
+            "controllerForeignInstanciation": {
+                "template": "o.set[fieldNameMaj](new [projectNameMin].entities.[foreignType]([content]));",
+                "value": "entity.getData().get(\"[fieldNameMin]\")"
+            },
+            "controllerForeignList": "[projectNameMin].entities.[foreignType][] [foreignNameMin]=dao.select(connex, [projectNameMin].entities.[foreignType].class);\nmodel.addItem(\"[foreignNameMin]s\", [foreignNameMin]);",
+            "controllerForeignContextParam": "",
+            "controllerForeignContextInstanciation": "",
+            "controllerConstructors": [],
+            "controllerForeignInclude": "",
+            "controllerMethods": [
+                {
+                    "controllerMethodAnnotations": [
+                        "@RestApi(method = \"POST\", params = true)",
+                        "@AnnotationUrl(url = \"[classNameMin]s\")"
+                    ],
+                    "controllerMethodParameter": "",
+                    "controllerMethodContent": "flamework/controller/flameworkControllerInsert"
+                },
+                {
+                    "controllerMethodAnnotations": [
+                        "@RestApi(method = \"GET\", params = false)",
+                        "@AnnotationUrl(url = \"[classNameMin]s\")"
+                    ],
+                    "controllerMethodParameter": "",
+                    "controllerMethodContent": "flamework/controller/flameworkControllerRead"
+                },
+                {
+                    "controllerMethodAnnotations": [
+                        "@RestApi(method = \"PUT\", params = true)",
+                        "@AnnotationUrl(url = \"[classNameMin]s\")"
+                    ],
+                    "controllerMethodParameter": "",
+                    "controllerMethodContent": "flamework/controller/flameworkControllerUpdate"
+                },
+                {
+                    "controllerMethodAnnotations": [
+                        "@RestApi(method = \"DELETE\", params = true)",
+                        "@AnnotationUrl(url = \"[classNameMin]s\")"
+                    ],
+                    "controllerMethodParameter": "",
+                    "controllerMethodContent": "flamework/controller/flameworkControllerDelete"
+                },
+                {
+                    "controllerMethodAnnotations": [
+                        "@RestApi(method = \"GET\", params = true)",
+                        "@AnnotationUrl(url = \"[classNameMin]s\")"
+                    ],
+                    "controllerMethodParameter": "",
+                    "controllerMethodContent": "flamework/controller/flameworkControllerFindById"
+                }
+            ],
+            "controllerSavepath": "[projectNameMaj]/src/controllers",
+            "controllerExtension": "java",
+            "controllerPackage": "controllers",
+            "controllerTemplate": "ControllerTemplate",
+            "controllerNameSuffix": "Controller"
+        },
+        "view": {
+            "viewForeignList": "[foreignType][] [foreignNameMin]=([foreignType][])request.getAttribute(\"[foreignNameMin]s\");",
+            "viewTableHeader": "<th scope=\"col\">[fieldNameFormattedMaj]</th>",
+            "foreignFieldGet": ".getLabel()",
+            "viewTableLine": "<td><%= o.get[fieldNameMaj]()[foreignFieldGet] %></td>",
+            "viewUpdateFormForeignField": "flamework/view/components/flameworkViewUpdateForeign",
+            "viewUpdateFormField": {
+                "Integer": "flamework/view/components/flameworkViewUpdateInt",
+                "Double": "flamework/view/components/flameworkViewUpdateDouble",
+                "String": "flamework/view/components/flameworkViewUpdateString",
+                "java.time.LocalDate": "flamework/view/components/flameworkViewUpdateDate",
+                "java.time.LocalDateTime": "flamework/view/components/flameworkViewUpdateTimestamp"
+            },
+            "viewInsertFormForeignField": "flamework/view/components/flameworkViewInsertForeign",
+            "viewInsertFormField": {
+                "Integer": "flamework/view/components/flameworkViewInsertInt",
+                "Double": "flamework/view/components/flameworkViewInsertDouble",
+                "String": "flamework/view/components/flameworkViewInsertString",
+                "java.time.LocalDate": "flamework/view/components/flameworkViewInsertDate",
+                "java.time.LocalDateTime": "flamework/view/components/flameworkViewInsertTimestamp"
+            },
+            "viewName": "[classNameMin]",
+            "viewContent": "flamework/view/flameworkView",
+            "viewSavePath": "[projectNameMaj]/web/pages",
+            "viewExtension": "jsp"
+        },
+        "customChanges": [],
+        "navbarLinks": {
+            "path": "[projectNameMaj]/web/pages/layout/layout.jsp",
+            "link": "<a href=\"/[projectNameMaj]/tocrud[classNameMin].do\" class=\"nav-item nav-link\"><i class=\"fa fa-tachometer-alt me-2\"></i>[classNameformattedMaj]</a>"
+        }
+    }
+]

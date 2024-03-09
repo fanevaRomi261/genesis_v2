@@ -1,0 +1,7 @@
+public String save(@FromBody [classNameMaj] [classNameMin]) throws Exception {
+    try (Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
+        dao.insertWithoutPrimaryKey(connex, [classNameMin]);
+        connex.commit();
+        return "save successful";
+    }
+}

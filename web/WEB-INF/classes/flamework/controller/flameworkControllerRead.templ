@@ -1,0 +1,6 @@
+public [classNameMaj][] findAll() throws Exception {
+    try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
+        [classNameMaj][] [classNameMin]s = dao.select(connex, [classNameMaj].class);
+        return [classNameMin]s;
+    }
+}
