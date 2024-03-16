@@ -1,0 +1,63 @@
+import { Component } from '@angular/core';
+import { ButtonModule, CardModule, FormModule, GridModule } from '@coreui/angular';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { API_CONFIG } from '../../../api.config';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-modifier-[classNameMin]',
+  standalone: true,
+  imports: [
+    FormModule,
+    GridModule,
+    CardModule,
+    ButtonModule,
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+  ],
+  templateUrl: './modifier-[classNameMin].component.html'
+})
+export class Modifier[classNameMaj]Component {
+  [classNameMin]: any;
+  
+  formData = {
+    [formData]
+  };
+  constructor(private router: Router, private http: HttpClient,private route: ActivatedRoute) { 
+
+  }
+ 
+  navigateTo(lien:string) {
+    this.router.navigate([lien]);
+  }
+  
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.getData(params['id']);
+    });
+  }
+  
+  getData(id:string) {
+    this.http.get(API_CONFIG.apiUrl+"/[classNameMin]s/"+id).subscribe((response) => {
+      this.[classNameMin]= response;
+      [formDataUpdate]
+      console.log(response);
+    }, (error) => {
+      console.error(error);
+    });
+  }
+  update[classNameMaj](){
+    console.log("UPDATE : "+JSON.stringify(this.formData));
+    this.http.put<any>(API_CONFIG.apiUrl + "/[classNameMin]s", this.formData).subscribe(response => {
+    this.navigateTo("/liste_[classNameMin]");
+    }, error => {
+      // Handle error
+      console.error('Error:', error);
+    });
+  }
+}

@@ -1,5 +1,5 @@
 <div class="mb-3"> 
-    <label for="[fieldNameMin]input" class="form-label">[fieldNameFormattedMaj]
+    <label cLabel for="[fieldNameMin]">[fieldNameFormattedMaj]
     </label> 
-    <input type="text" class="form-control" id="[fieldNameMin]input" aria-describedby="[fieldNameMin]help" name="[fieldNameMin]"> 
+    <input cFormControl id="[fieldNameMin]" type="text" [(ngModel)]="formData.[fieldNameMin]" name="[fieldNameMin]"> 
 </div>

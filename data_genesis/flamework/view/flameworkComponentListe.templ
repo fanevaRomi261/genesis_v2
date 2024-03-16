@@ -1,0 +1,89 @@
+import { Component } from '@angular/core';
+import { ButtonModule, DropdownModule, FormModule, ModalModule, TableModule } from '@coreui/angular';
+import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { API_CONFIG } from '../../../api.config';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-liste-[classNameMin]',
+  standalone: true,
+  imports: [
+    TableModule,
+    DropdownModule,
+    ButtonModule,
+    ModalModule,
+    FormModule,
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+  ],
+  templateUrl: './liste-[classNameMin].component.html'
+})
+export class Liste[classNameMaj]Component {
+
+  [classNameMin]s: any = [];
+  
+  formData = {
+    [formData]
+  };
+
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) { }
+
+  ngOnInit(): void {
+    this.getData();
+  }
+
+  // get(select)
+  getData() {
+    this.http.get(API_CONFIG.apiUrl + '/[classNameMin]s').subscribe((response) => {
+      this.[classNameMin]s = response;
+      console.log(response);
+    }, (error) => {
+      console.error(error);
+    });
+  }
+
+  // post(insert)
+  submitForm() {
+    
+
+    this.http.post<any>(API_CONFIG.apiUrl + '/[classNameMin]s', this.formData).subscribe(response => {
+      window.location.reload();
+      this.toggleLiveDemo();
+    }, error => {
+      // Handle error
+      console.error('Error:', error);
+    });
+  }
+
+  public visible = false;
+
+  toggleLiveDemo() {
+    this.visible = !this.visible;
+  }
+
+  handleLiveDemoChange(event: any) {
+    this.visible = event;
+  }
+
+  modifier[classNameMaj](id: number) {
+    this.router.navigate(['/modifier_[classNameMin]', id]);
+  }
+
+  // delete 
+  delete[classNameMaj](id:number){
+    this.http.delete<any>(`${API_CONFIG.apiUrl}/[classNameMin]s/${id}`).subscribe(response => {
+      console.log(response);
+      window.location.reload();
+    }, error => {
+      console.error('Error:', error);
+    });
+  }
+  
+}

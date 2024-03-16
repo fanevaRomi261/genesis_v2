@@ -22,6 +22,7 @@
             "java.time.LocalDateTime": "java.time.LocalDateTime.parse([value])"
         },
         "skeleton": "flamework_skeleton",
+        "view_directory": "view.zip",
         "projectNameTags": [
             "[projectNameMaj]/web/pages/layout/layout.jsp",
             "[projectNameMaj]/web/WEB-INF/web.xml",
@@ -160,8 +161,8 @@
         "view": {
             "viewForeignList": "[foreignType][] [foreignNameMin]=([foreignType][])request.getAttribute(\"[foreignNameMin]s\");",
             "viewTableHeader": "<th scope=\"col\">[fieldNameFormattedMaj]</th>",
-            "foreignFieldGet": ".getLabel()",
-            "viewTableLine": "<td><%= o.get[fieldNameMaj]()[foreignFieldGet] %></td>",
+            "foreignFieldGet": "nom",
+            "viewTableLine": "<td>{{[classNameMin].[fieldNameMin]}}</td>",
             "viewUpdateFormForeignField": "flamework/view/components/flameworkViewUpdateForeign",
             "viewUpdateFormField": {
                 "Integer": "flamework/view/components/flameworkViewUpdateInt",
@@ -178,10 +179,44 @@
                 "java.time.LocalDate": "flamework/view/components/flameworkViewInsertDate",
                 "java.time.LocalDateTime": "flamework/view/components/flameworkViewInsertTimestamp"
             },
-            "viewName": "[classNameMin]",
-            "viewContent": "flamework/view/flameworkView",
-            "viewSavePath": "[projectNameMaj]/web/pages",
-            "viewExtension": "jsp"
+            "viewName": {
+                "liste": "liste-[classNameMin].component",
+                "modifier": "modifier-[classNameMin].component"
+            },
+            "viewContent": {
+                "liste": "flamework/view/flameworkViewListe",
+                "modifier": "flamework/view/flameworkViewModifier"
+            },
+            "viewSavePath": {
+                "liste": "angular/[projectNameMaj]/src/app/crud/[classNameMin]/liste-[classNameMin]",
+                "modifier": "angular/[projectNameMaj]/src/app/crud/[classNameMin]/modifier-[classNameMin]"
+            },
+            "viewExtension": "html"
+        },
+        "componentService": {
+            "formData": "[fieldNameMin]: null,",
+            "formDataUpdate": "this.formData.[fieldNameMin] = this.[classNameMin] ? this.[classNameMin].[fieldNameMin] : null;",
+            "componentServiceName": {
+                "liste": "liste-[classNameMin].component",
+                "modifier": "modifier-[classNameMin].component"
+            },
+            "componentServiceContent": {
+                "liste": "flamework/view/flameworkComponentListe",
+                "modifier": "flamework/view/flameworkComponentModifier"
+            },
+            "componentServiceSavePath": {
+                "liste": "angular/[projectNameMaj]/src/app/crud/[classNameMin]/liste-[classNameMin]",
+                "modifier": "angular/[projectNameMaj]/src/app/crud/[classNameMin]/modifier-[classNameMin]"
+            },
+            "specName": {
+                "liste": "liste-[classNameMin].component.spec",
+                "modifier": "modifier-[classNameMin].component.spec"
+            },
+            "specContent": {
+                "liste": "flamework/view/flameworkSpecListe",
+                "modifier": "flamework/view/flameworkSpecModifier"
+            },
+            "fileExtension": "ts"
         },
         "customChanges": [],
         "navbarLinks": {

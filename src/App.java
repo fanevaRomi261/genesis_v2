@@ -1,6 +1,11 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.Scanner;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import genesis.Constantes;
 import genesis.Credentials;
@@ -10,6 +15,7 @@ import genesis.Database;
 import genesis.Entity;
 import genesis.EntityField;
 import genesis.Language;
+import genesis.angular.Config;
 import handyman.HandyManUtils;
 
 public class App {
@@ -28,8 +34,9 @@ public class App {
                 File project, credentialFile;
                 String customFilePath, customFileContentOuter;
                 Entity[] entities;
-                String[] models, controllers, views;
-                String modelFile, controllerFile, viewFile, customFile;
+                String[] models, controllers, views, componentServices, viewFiles, componentServiceFiles, specs,
+                                specFiles;
+                String modelFile, controllerFile, customFile;
                 String customFileContent;
                 String foreignContext;
                 String customChanges, changesFile;
@@ -65,9 +72,12 @@ public class App {
                         projectName = scanner.next();
                         System.out.print("Which entities to import ?(* to select all): ");
                         entityName = scanner.next();
-                        credentials = new Credentials(databaseName, user, pwd, host, useSSL, allowPublicKeyRetrieval);
+                        credentials = new Credentials(databaseName, user, pwd, host, useSSL,
+                                        allowPublicKeyRetrieval);
                         project = new File(projectName);
                         project.mkdir();
+                        File angularProject = new File("angular/" + projectName);
+                        angularProject.mkdir();
                         for (CustomFile c : language.getAdditionnalFiles()) {
                                 customFilePath = c.getName();
                                 customFilePath = customFilePath.replace("[projectNameMaj]",
@@ -82,9 +92,13 @@ public class App {
                                         Constantes.DATA_PATH + "/" + language.getSkeleton() + "."
                                                         + Constantes.SKELETON_EXTENSION,
                                         project.getPath());
+                        HandyManUtils.extractDir(Constantes.DATA_PATH + "/" +
+                                        language.getView_directory(),
+                                        angularProject.getPath());
                         credentialFile = new File(project.getPath(), Constantes.CREDENTIAL_FILE);
                         credentialFile.createNewFile();
-                        HandyManUtils.overwriteFileContent(credentialFile.getPath(), HandyManUtils.toJson(credentials));
+                        HandyManUtils.overwriteFileContent(credentialFile.getPath(),
+                                        HandyManUtils.toJson(credentials));
                         for (String replace : language.getProjectNameTags()) {
                                 projectNameTagPath = replace
                                                 .replace("[projectNameMaj]", HandyManUtils.majStart(projectName))
@@ -98,11 +112,14 @@ public class App {
                                                 database.getPort());
                                 projectNameTagContent = projectNameTagContent.replace("[databaseName]",
                                                 credentials.getDatabaseName());
-                                projectNameTagContent = projectNameTagContent.replace("[user]", credentials.getUser());
-                                projectNameTagContent = projectNameTagContent.replace("[pwd]", credentials.getPwd());
+                                projectNameTagContent = projectNameTagContent.replace("[user]",
+                                                credentials.getUser());
+                                projectNameTagContent = projectNameTagContent.replace("[pwd]",
+                                                credentials.getPwd());
                                 projectNameTagContent = projectNameTagContent.replace("[projectNameMin]",
                                                 HandyManUtils.minStart(projectName));
-                                HandyManUtils.overwriteFileContent(projectNameTagPath, projectNameTagContent);
+                                HandyManUtils.overwriteFileContent(projectNameTagPath,
+                                                projectNameTagContent);
                         }
                         try (Connection connect = database.getConnexion(credentials)) {
                                 entities = database.getEntities(connect, credentials, entityName);
@@ -111,26 +128,36 @@ public class App {
                                 }
                                 models = new String[entities.length];
                                 controllers = new String[entities.length];
-                                views = new String[entities.length];
+                                views = new String[entities.length * 2];
+                                componentServices = new String[entities.length * 2];
+                                specs = new String[entities.length * 2];
                                 navLink = "";
                                 for (int i = 0; i < models.length; i++) {
                                         models[i] = language.generateModel(entities[i], projectName);
-                                        controllers[i] = language.generateController(entities[i], database, credentials,
+                                        controllers[i] = language.generateController(entities[i], database,
+                                                        credentials,
                                                         projectName);
-                                        views[i] = language.generateView(entities[i], projectName);
+                                        views[i * 2] = language.generateView(entities[i], projectName,
+                                                        language.getView().getViewContent().get("liste"));
+                                        views[(i * 2) + 1] = language.generateView(entities[i], projectName,
+                                                        language.getView().getViewContent().get("modifier"));
+                                        componentServices[i * 2] = language.generateComponentService(entities[i],
+                                                        projectName, language.getComponentService()
+                                                                        .getComponentServiceContent().get("liste"));
+                                        componentServices[(i * 2) + 1] = language.generateComponentService(entities[i],
+                                                        projectName, language.getComponentService()
+                                                                        .getComponentServiceContent().get("modifier"));
+                                        specs[i * 2] = language.generateComponentService(entities[i],
+                                                        projectName, language.getComponentService()
+                                                                        .getSpecContent().get("liste"));
+                                        specs[(i * 2) + 1] = language.generateComponentService(entities[i],
+                                                        projectName, language.getComponentService()
+                                                                        .getSpecContent().get("modifier"));
                                         modelFile = language.getModel().getModelSavePath().replace("[projectNameMaj]",
                                                         HandyManUtils.majStart(projectName));
                                         controllerFile = language.getController().getControllerSavepath().replace(
                                                         "[projectNameMaj]",
                                                         HandyManUtils.majStart(projectName));
-                                        viewFile = language.getView().getViewSavePath().replace("[projectNameMaj]",
-                                                        HandyManUtils.majStart(projectName));
-                                        viewFile = viewFile.replace("[projectNameMin]",
-                                                        HandyManUtils.minStart(projectName));
-                                        viewFile = viewFile.replace("[classNameMaj]",
-                                                        HandyManUtils.majStart(entities[i].getClassName()));
-                                        viewFile = viewFile.replace("[classNameMin]",
-                                                        HandyManUtils.minStart(entities[i].getClassName()));
                                         modelFile = modelFile.replace("[projectNameMin]",
                                                         HandyManUtils.minStart(projectName));
                                         controllerFile = controllerFile.replace("[projectNameMin]",
@@ -140,11 +167,64 @@ public class App {
                                         controllerFile += "/" + HandyManUtils.majStart(entities[i].getClassName())
                                                         + language.getController().getControllerNameSuffix() + "."
                                                         + language.getController().getControllerExtension();
-                                        viewFile += "/" + language.getView().getViewName() + "."
+                                        viewFiles = new String[2];
+                                        componentServiceFiles = new String[2];
+                                        specFiles = new String[2];
+                                        viewFiles[0] = language.getView().getViewSavePath().get("liste").replace(
+                                                        "[projectNameMaj]",
+                                                        HandyManUtils.majStart(projectName));
+                                        viewFiles[1] = language.getView().getViewSavePath().get("modifier").replace(
+                                                        "[projectNameMaj]",
+                                                        HandyManUtils.majStart(projectName));
+                                        viewFiles[0] += "/" + language.getView().getViewName().get("liste") + "."
                                                         + language.getView().getViewExtension();
-                                        viewFile = viewFile.replace("[classNameMin]",
-                                                        HandyManUtils.minStart(entities[i].getClassName()));
+                                        viewFiles[1] += "/" + language.getView().getViewName().get("modifier") + "."
+                                                        + language.getView().getViewExtension();
+                                        componentServiceFiles[0] = language.getComponentService()
+                                                        .getComponentServiceSavePath().get("liste")
+                                                        .replace("[projectNameMaj]",
+                                                                        HandyManUtils.majStart(projectName));
+                                        componentServiceFiles[1] = language.getComponentService()
+                                                        .getComponentServiceSavePath().get("modifier")
+                                                        .replace("[projectNameMaj]",
+                                                                        HandyManUtils.majStart(projectName));
+                                        componentServiceFiles[0] += "/"
+                                                        + language.getComponentService().getComponentServiceName()
+                                                                        .get("liste")
+                                                        + "." + language.getComponentService().getFileExtension();
+                                        componentServiceFiles[1] += "/"
+                                                        + language.getComponentService().getComponentServiceName()
+                                                                        .get("modifier")
+                                                        + "." + language.getComponentService().getFileExtension();
+                                        specFiles[0] = language.getComponentService()
+                                                        .getComponentServiceSavePath().get("liste")
+                                                        .replace("[projectNameMaj]",
+                                                                        HandyManUtils.majStart(projectName));
+                                        specFiles[1] = language.getComponentService()
+                                                        .getComponentServiceSavePath().get("modifier")
+                                                        .replace("[projectNameMaj]",
+                                                                        HandyManUtils.majStart(projectName));
+                                        specFiles[0] += "/"
+                                                        + language.getComponentService().getSpecName()
+                                                                        .get("liste")
+                                                        + "." + language.getComponentService().getFileExtension();
+                                        specFiles[1] += "/"
+                                                        + language.getComponentService().getSpecName()
+                                                                        .get("modifier")
+                                                        + "." + language.getComponentService().getFileExtension();
+                                        for (int j = 0; j < viewFiles.length; j++) {
+                                                viewFiles[j] = viewFiles[j].replace("[classNameMin]",
+                                                                HandyManUtils.minStart(entities[i].getClassName()));
+                                                componentServiceFiles[j] = componentServiceFiles[j].replace(
+                                                                "[classNameMin]",
+                                                                HandyManUtils.minStart(entities[i].getClassName()));
+                                                specFiles[j] = specFiles[j].replace(
+                                                                "[classNameMin]",
+                                                                HandyManUtils.minStart(entities[i].getClassName()));
+                                        }
                                         HandyManUtils.createFile(modelFile);
+                                        new Config().generateConfigFile(entities, projectName);
+
                                         for (CustomFile f : language.getModel().getModelAdditionnalFiles()) {
                                                 foreignContext = "";
                                                 for (EntityField ef : entities[i].getFields()) {
@@ -186,10 +266,18 @@ public class App {
                                                 HandyManUtils.overwriteFileContent(customFile, customFileContent);
                                         }
                                         HandyManUtils.createFile(controllerFile);
-                                        HandyManUtils.createFile(viewFile);
+                                        for (int j = 0; j < viewFiles.length; j++) {
+                                                HandyManUtils.createFile(viewFiles[j]);
+                                                HandyManUtils.createFile(componentServiceFiles[j]);
+                                                HandyManUtils.createFile(specFiles[j]);
+                                                HandyManUtils.overwriteFileContent(viewFiles[j], views[(i * 2) + j]);
+                                                HandyManUtils.overwriteFileContent(componentServiceFiles[j],
+                                                                componentServices[(i * 2) + j]);
+                                                HandyManUtils.overwriteFileContent(specFiles[j],
+                                                                specs[(i * 2) + j]);
+                                        }
                                         HandyManUtils.overwriteFileContent(modelFile, models[i]);
                                         HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
-                                        HandyManUtils.overwriteFileContent(viewFile, views[i]);
                                         navLink += language.getNavbarLinks().getLink();
                                         navLink = navLink.replace("[projectNameMaj]",
                                                         HandyManUtils.majStart(projectName));

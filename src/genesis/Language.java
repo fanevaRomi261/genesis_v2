@@ -10,11 +10,13 @@ public class Language {
     private HashMap<String, String> syntax;
     private HashMap<String, String> types, typeParsers;
     private String skeleton;
+    private String view_directory;
     private String[] projectNameTags;
     private CustomFile[] additionnalFiles;
     private Model model;
     private Controller controller;
     private View view;
+    private ComponentService componentService;
     private CustomChanges[] customChanges;
     private NavbarLink navbarLinks;
 
@@ -82,6 +84,14 @@ public class Language {
         this.skeleton = skeleton;
     }
 
+    public String getView_directory() {
+        return view_directory;
+    }
+
+    public void setView_directory(String view_directory) {
+        this.view_directory = view_directory;
+    }
+
     public String[] getProjectNameTags() {
         return projectNameTags;
     }
@@ -120,6 +130,14 @@ public class Language {
 
     public void setView(View view) {
         this.view = view;
+    }
+
+    public ComponentService getComponentService() {
+        return componentService;
+    }
+
+    public void setComponentService(ComponentService componentService) {
+        this.componentService = componentService;
     }
 
     public String generateModel(Entity entity, String projectName) throws IOException, Exception {
@@ -364,9 +382,9 @@ public class Language {
         return content;
     }
 
-    public String generateView(Entity entity, String projectName) throws IOException, Exception {
+    public String generateView(Entity entity, String projectName, String template) throws IOException, Exception {
         String content = HandyManUtils.getFileContent(
-                Constantes.DATA_PATH + "/" + getView().getViewContent() + "." + Constantes.VIEW_TEMPLATE_EXT);
+                Constantes.DATA_PATH + "/" + template + "." + Constantes.VIEW_TEMPLATE_EXT);
         String foreignList = "";
         String tableHeader = "";
         String tableLine = "";
@@ -401,6 +419,7 @@ public class Language {
             }
             updateForm += HandyManUtils.getFileContent(Constantes.DATA_PATH + "/"
                     + getView().getViewUpdateFormForeignField() + "." + Constantes.VIEW_TEMPLATE_EXT);
+            updateForm = updateForm.replace("[foreignFieldGet]", getView().getForeignFieldGet());
             updateForm = updateForm.replace("[foreignType]", ef.getType());
             updateForm = updateForm.replace("[foreignNameMin]", HandyManUtils.minStart(ef.getName()));
             updateForm = updateForm.replace("[foreignNameMaj]", HandyManUtils.majStart(ef.getName()));
@@ -411,6 +430,7 @@ public class Language {
             updateForm = updateForm.replace("[foreignNameFormattedMaj]", HandyManUtils.formatReadable(ef.getName()));
             insertForm += HandyManUtils.getFileContent(Constantes.DATA_PATH + "/"
                     + getView().getViewInsertFormForeignField() + "." + Constantes.VIEW_TEMPLATE_EXT);
+            insertForm = insertForm.replace("[foreignFieldGet]", getView().getForeignFieldGet());
             insertForm = insertForm.replace("[foreignType]", ef.getType());
             insertForm = insertForm.replace("[foreignNameMin]", HandyManUtils.minStart(ef.getName()));
             insertForm = insertForm.replace("[foreignNameMaj]", HandyManUtils.majStart(ef.getName()));
@@ -431,6 +451,31 @@ public class Language {
         content = content.replace("[viewTableLine]", tableLine);
         content = content.replace("[viewUpdateFormField]", updateForm);
         content = content.replace("[viewInsertFormField]", insertForm);
+        content = content.replace("[projectNameMin]", HandyManUtils.minStart(projectName));
+        content = content.replace("[projectNameMaj]", HandyManUtils.majStart(projectName));
+        content = content.replace("[classNameMaj]", HandyManUtils.majStart(entity.getClassName()));
+        content = content.replace("[classNameMin]", HandyManUtils.minStart(entity.getClassName()));
+        content = content.replace("[primaryNameMaj]", HandyManUtils.majStart(entity.getPrimaryField().getName()));
+        content = content.replace("[primaryNameMin]", HandyManUtils.minStart(entity.getPrimaryField().getName()));
+        return content;
+    }
+
+    public String generateComponentService(Entity entity, String projectName, String template)
+            throws IOException, Exception {
+        String content = HandyManUtils.getFileContent(
+                Constantes.DATA_PATH + "/" + template + ".templ");
+        String formData = "";
+        String formDataUpdate = "";
+        for (EntityField ef : entity.getFields()) {
+            formData += this.getComponentService().getFormData() + "\n";
+            formDataUpdate += this.getComponentService().getFormDataUpdate() + "\n";
+            formData = formData.replace("[fieldNameMin]", HandyManUtils.minStart(ef.getName()))
+                    .replace("[classNameMin]", HandyManUtils.minStart(entity.getClassName()));
+            formDataUpdate = formDataUpdate.replace("[fieldNameMin]", HandyManUtils.minStart(ef.getName()))
+                    .replace("[classNameMin]", HandyManUtils.minStart(entity.getClassName()));
+        }
+        content = content.replace("[formData]", formData);
+        content = content.replace("[formDataUpdate]", formDataUpdate);
         content = content.replace("[projectNameMin]", HandyManUtils.minStart(projectName));
         content = content.replace("[projectNameMaj]", HandyManUtils.majStart(projectName));
         content = content.replace("[classNameMaj]", HandyManUtils.majStart(entity.getClassName()));

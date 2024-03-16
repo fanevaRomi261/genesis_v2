@@ -1,0 +1,16 @@
+<button (click)="navigateTo('liste_[classNameMin]')" cButton color="danger">Retour</button>
+
+<c-card class="mb-4" class="mt-4">
+    <c-card-header ngPreserveWhitespaces>
+      <strong>Formulaire de modification</strong>
+    </c-card-header>
+    <c-card-body>
+        <form cForm (ngSubmit)="update[classNameMaj]()" #myForm="ngForm">
+            [viewUpdateFormField]
+            <input cFormControl id="[primaryNameMin]" type="hidden" [(ngModel)]="formData.[primaryNameMin]" name="[primaryNameMin]" />
+            <div class="mb-3">
+                <button cButton type="submit">Valider</button>
+            </div>
+        </form>
+    </c-card-body>
+</c-card>

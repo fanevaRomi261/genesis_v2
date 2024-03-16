@@ -1,12 +1,9 @@
-<div class="form-floating mb-3"> 
-    <select class="form-select" id="[fieldNameMin]Select" name="[fieldNameMin]">
-        <% for([foreignType] f:[foreignNameMin]){ %>
-        <option value="<%= f.get[foreignPrimaryNameMaj]() %>" <% if(f.get[foreignPrimaryNameMaj]().equals(o.get[fieldNameMaj]().get[foreignPrimaryNameMaj]())){ out.print("selected"); } %>>
-            <%= f.getLabel() %>
+<div class="mb-3"> 
+    <select cFormControl id="[fieldNameMin]" name="[fieldNameMin]" [(ngModel)]="formData.[fieldNameMin]">
+        <option *ngFor="let [foreignNameMin] of [foreignNameMin]s">{{ [foreignNameMin].[foreignFieldGet] }}
         </option>
-        <% } %>
     </select> 
-    <label for="[fieldNameMin]Select">
+    <label cLabel for="[fieldNameMin]">
         [foreignNameFormattedMaj]
     </label> 
 </div>

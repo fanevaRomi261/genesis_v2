@@ -1,0 +1,50 @@
+<button (click)="toggleLiveDemo()" cButton>Ajouter</button>
+
+<!-- -- MODAL DEBUT -- -->
+<c-modal id="liveDemoModal" [visible]="visible" (visibleChange)="handleLiveDemoChange($event)">
+  <c-modal-header>
+    <h5 cModalTitle>Insertion</h5>
+    <button (click)="toggleLiveDemo()" cButtonClose></button>
+  </c-modal-header>
+
+  <form cForm (ngSubmit)="submitForm()" #myForm="ngForm">
+    <c-modal-body>
+        [viewInsertFormField]
+    </c-modal-body>
+
+    <c-modal-footer>
+      <button (click)="toggleLiveDemo()" cButton color="secondary">
+        Fermer
+      </button>
+      <button type="submit" cButton color="primary">Valider</button>
+    </c-modal-footer>
+  </form>
+</c-modal>
+<!--  -- MODAL FIN -- -->
+
+<table class="mt-2" hover [striped]="true" bordered cTable>
+    <thead cTableColor="dark">
+        <tr>
+            [viewTableHeader]
+            <td>Action</td>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr *ngFor="let [classNameMin] of [classNameMin]s">
+            [viewTableLine]
+            <td>
+                <c-dropdown variant="btn-group">
+                    <button cButton cDropdownToggle color="primary"></button>
+                    <ul cDropdownMenu>
+                    <li><button (click)="modifier[classNameMaj]([classNameMin]?.[primaryNameMin])" cDropdownItem>Modifier</button></li>
+                    <li><button (click)="delete[classNameMaj]([classNameMin]?.[primaryNameMin])" cDropdownItem>Supprimer</button></li>
+                    </ul>
+                </c-dropdown>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+          
+
