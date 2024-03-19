@@ -24,6 +24,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 export class Modifier[classNameMaj]Component {
   [classNameMin]: any;
+  [foreignList]
   
   formData = {
     [formData]
@@ -40,6 +41,7 @@ export class Modifier[classNameMaj]Component {
     this.route.params.subscribe(params => {
       this.getData(params['id']);
     });
+    [callGetDataForeign]
   }
   
   getData(id:string) {
@@ -51,6 +53,7 @@ export class Modifier[classNameMaj]Component {
       console.error(error);
     });
   }
+  [getDataForeignList]
   update[classNameMaj](){
     console.log("UPDATE : "+JSON.stringify(this.formData));
     this.http.put<any>(API_CONFIG.apiUrl + "/[classNameMin]s", this.formData).subscribe(response => {

@@ -1,9 +1,9 @@
 <div class="mb-3"> 
-    <select cFormControl id="[fieldNameMin]" name="[fieldNameMin]" [(ngModel)]="formData.[fieldNameMin]">
-        <option *ngFor="let [foreignNameMin] of [foreignNameMin]s">{{ [foreignNameMin].[foreignFieldGet] }}
-        </option>
-    </select> 
     <label cLabel for="[fieldNameMin]">
         [foreignNameFormattedMaj]
     </label> 
+    <select cSelect id="[fieldNameMin]" name="[fieldNameMin]" [(ngModel)]="formData.[fieldNameMin]">
+        <option *ngFor="let [foreignNameMin] of [foreignNameMin]s" [ngValue]="[foreignNameMin]">{{ [foreignNameMin].[foreignFieldGet] }}
+        </option>
+    </select> 
 </div>

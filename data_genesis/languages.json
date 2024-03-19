@@ -66,21 +66,20 @@
         "controller": {
             "controllerImports": [
                 "import itu.framework.annotation.AnnotationUrl;",
-                "import itu.framework.annotation.Authentification;",
-                "import itu.framework.annotation.AnnotationScop;",
                 "import itu.framework.annotation.AnnotationSession;",
                 "import itu.framework.annotation.FromBody;",
                 "import itu.framework.annotation.FromHeader;",
                 "import itu.framework.annotation.FromUrl;",
                 "import itu.framework.annotation.RestApi;",
-                "import itu.framework.upload.FileUpload;",
-                "import itu.framework.modelview.ModelView;",
                 "import veda.godao.DAO;",
                 "import veda.godao.utils.DAOConnexion;",
                 "import java.sql.Connection;",
+                "import itu.framework.annotation.ITWorkController;",
                 "import entities.[classNameMaj];"
             ],
-            "controllerAnnotations": [],
+            "controllerAnnotations": [
+                "@ITWorkController"
+            ],
             "controllerExtends": "",
             "controllerName": "[classNameMaj]Controller",
             "controllerFields": [
@@ -161,8 +160,9 @@
         "view": {
             "viewForeignList": "[foreignType][] [foreignNameMin]=([foreignType][])request.getAttribute(\"[foreignNameMin]s\");",
             "viewTableHeader": "<th scope=\"col\">[fieldNameFormattedMaj]</th>",
-            "foreignFieldGet": "nom",
+            "foreignFieldGet": "libelle",
             "viewTableLine": "<td>{{[classNameMin].[fieldNameMin]}}</td>",
+            "viewTableLineForeign": "<td>{{[classNameMin].[fieldNameMin].[foreignFieldGet]}}</td>",
             "viewUpdateFormForeignField": "flamework/view/components/flameworkViewUpdateForeign",
             "viewUpdateFormField": {
                 "Integer": "flamework/view/components/flameworkViewUpdateInt",
@@ -194,6 +194,8 @@
             "viewExtension": "html"
         },
         "componentService": {
+            "callGetDataForeign": "this.getData[foreignType]s();",
+            "foreignList": "[foreignNameMin]s: any = [];",
             "formData": "[fieldNameMin]: null,",
             "formDataUpdate": "this.formData.[fieldNameMin] = this.[classNameMin] ? this.[classNameMin].[fieldNameMin] : null;",
             "componentServiceName": {
@@ -216,6 +218,7 @@
                 "liste": "flamework/view/flameworkSpecListe",
                 "modifier": "flamework/view/flameworkSpecModifier"
             },
+            "componentGetDataForeign": "flamework/view/components/flameworkComponentGetDataForeign",
             "fileExtension": "ts"
         },
         "customChanges": [],

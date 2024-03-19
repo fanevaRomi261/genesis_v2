@@ -3,10 +3,11 @@ package genesis;
 import java.util.HashMap;
 
 public class ComponentService {
-    private String formData, formDataUpdate;
+    private String formData, formDataUpdate, foreignList;
     private HashMap<String, String> componentServiceName, specName;
     private HashMap<String, String> componentServiceContent, specContent;
     private HashMap<String, String> componentServiceSavePath;
+    private String componentGetDataForeign, callGetDataForeign;
     private String fileExtension;
 
     public String getFormData() {
@@ -23,6 +24,14 @@ public class ComponentService {
 
     public void setFormDataUpdate(String formDataUpdate) {
         this.formDataUpdate = formDataUpdate;
+    }
+
+    public String getForeignList() {
+        return foreignList;
+    }
+
+    public void setForeignList(String foreignList) {
+        this.foreignList = foreignList;
     }
 
     public HashMap<String, String> getComponentServiceName() {
@@ -63,6 +72,22 @@ public class ComponentService {
 
     public void setComponentServiceSavePath(HashMap<String, String> componentServiceSavePath) {
         this.componentServiceSavePath = componentServiceSavePath;
+    }
+
+    public String getComponentGetDataForeign() {
+        return componentGetDataForeign;
+    }
+
+    public void setComponentGetDataForeign(String componentGetDataForeign) {
+        this.componentGetDataForeign = componentGetDataForeign;
+    }
+
+    public String getCallGetDataForeign() {
+        return callGetDataForeign;
+    }
+
+    public void setCallGetDataForeign(String callGetDataForeign) {
+        this.callGetDataForeign = callGetDataForeign;
     }
 
     public String getFileExtension() {

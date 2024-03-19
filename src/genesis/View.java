@@ -7,6 +7,7 @@ public class View {
     private String viewTableHeader;
     private String foreignFieldGet;
     private String viewTableLine;
+    private String viewTableLineForeign;
     private String viewUpdateFormForeignField;
     private HashMap<String, String> viewUpdateFormField;
     private String viewInsertFormForeignField;
@@ -47,6 +48,15 @@ public class View {
     public void setViewTableLine(String viewTableLine) {
         this.viewTableLine = viewTableLine;
     }
+
+    public String getViewTableLineForeign() {
+        return viewTableLineForeign;
+    }
+
+    public void setViewTableLineForeign(String viewTableLineForeign) {
+        this.viewTableLineForeign = viewTableLineForeign;
+    }
+
 
     public String getViewUpdateFormForeignField() {
         return viewUpdateFormForeignField;

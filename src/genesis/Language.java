@@ -396,8 +396,12 @@ public class Language {
             tableHeader = tableHeader.replace("[fieldNameFormattedMaj]", HandyManUtils.formatReadable(ef.getName()));
             tableHeader = tableHeader.replace("[fieldNameMaj]", HandyManUtils.majStart(ef.getName()));
             tableHeader = tableHeader.replace("[fieldNameMin]", HandyManUtils.minStart(ef.getName()));
-            tableLine += getView().getViewTableLine();
-            tableLine = tableLine.replace("[fieldNameMaj]", HandyManUtils.majStart(ef.getName()));
+            if (ef.isForeign() == false) {
+                tableLine += getView().getViewTableLine();
+            } else {
+                tableLine += getView().getViewTableLineForeign();
+                tableLine = tableLine.replace("[foreignFieldGet]", getView().getForeignFieldGet());
+            }
             tableLine = tableLine.replace("[fieldNameMin]", HandyManUtils.minStart(ef.getName()));
             if (ef.isPrimary()) {
                 tableLine = tableLine.replace("[foreignFieldGet]", foreignGet);
@@ -466,6 +470,9 @@ public class Language {
                 Constantes.DATA_PATH + "/" + template + ".templ");
         String formData = "";
         String formDataUpdate = "";
+        String foreignList = "";
+        String getDataForeignList = "";
+        String callGetDataForeign = "";
         for (EntityField ef : entity.getFields()) {
             formData += this.getComponentService().getFormData() + "\n";
             formDataUpdate += this.getComponentService().getFormDataUpdate() + "\n";
@@ -473,7 +480,20 @@ public class Language {
                     .replace("[classNameMin]", HandyManUtils.minStart(entity.getClassName()));
             formDataUpdate = formDataUpdate.replace("[fieldNameMin]", HandyManUtils.minStart(ef.getName()))
                     .replace("[classNameMin]", HandyManUtils.minStart(entity.getClassName()));
+            if (ef.isForeign()) {
+                foreignList += this.getComponentService().getForeignList() + "\n";
+                foreignList = foreignList.replace("[foreignNameMin]", HandyManUtils.minStart(ef.getName()));
+                getDataForeignList += HandyManUtils.getFileContent(
+                    Constantes.DATA_PATH + "/" + this.getComponentService().getComponentGetDataForeign() + ".templ") + "\n";
+                getDataForeignList = getDataForeignList.replace("[foreignType]", ef.getType()).
+                replace("[foreignTypeMin]", HandyManUtils.minStart(ef.getType()));   
+                callGetDataForeign += this.getComponentService().getCallGetDataForeign() + "\n";
+                callGetDataForeign = callGetDataForeign.replace("[foreignType]", ef.getType());
+            }
         }
+        content = content.replace("[callGetDataForeign]", callGetDataForeign);
+        content = content.replace("[getDataForeignList]", getDataForeignList);
+        content = content.replace("[foreignList]", foreignList);
         content = content.replace("[formData]", formData);
         content = content.replace("[formDataUpdate]", formDataUpdate);
         content = content.replace("[projectNameMin]", HandyManUtils.minStart(projectName));

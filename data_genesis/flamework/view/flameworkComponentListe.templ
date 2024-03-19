@@ -25,6 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class Liste[classNameMaj]Component {
 
   [classNameMin]s: any = [];
+  [foreignList]
   
   formData = {
     [formData]
@@ -37,17 +38,19 @@ export class Liste[classNameMaj]Component {
 
   ngOnInit(): void {
     this.getData();
+    [callGetDataForeign]
   }
 
   // get(select)
   getData() {
     this.http.get(API_CONFIG.apiUrl + '/[classNameMin]s').subscribe((response) => {
       this.[classNameMin]s = response;
-      console.log(response);
     }, (error) => {
       console.error(error);
     });
   }
+
+  [getDataForeignList]
 
   // post(insert)
   submitForm() {
